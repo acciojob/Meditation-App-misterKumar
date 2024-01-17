@@ -1,125 +1,77 @@
+//your JS code here. If required.
 const app = document.getElementById('app');
+const videoContainer = document.querySelector('.vid-container');
+const video = document.getElementById('video');
+const audio = document.getElementById('audio');
+const soundButtons = document.querySelectorAll('.sound-picker button');
+const timeButtons = document.querySelectorAll('.time-select button');
+const timeDisplay = document.querySelector('.time-display');
+const playButton = document.querySelector('.play');
 
-const vidContainer = document.createElement('div');
-vidContainer.classList.add('vid-container');
+let currentTime = 10 * 60; // 10 minutes in seconds
+let isPlaying = false;
 
-const video = document.createElement('video');
-video.autoplay = true;
-video.muted = true;
-video.loop = true;
-video.src = './video/beach.mp4';
+function updateTimer() {
+  const minutes = Math.floor(currentTime / 60);
+  const seconds = currentTime % 60;
+  timeDisplay.textContent = `${minutes}:${seconds.toString().padStart(2, '0')}`;
+}
 
-const playerContainer = document.createElement('div');
-playerContainer.classList.add('player-container');
+function startTimer(duration) {
+  currentTime = duration * 60;
+  updateTimer();
 
-const soundPicker = document.createElement('div');
-soundPicker.classList.add('sound-picker');
+  const timer = setInterval(() => {
+    currentTime--;
+    updateTimer();
 
-const rainSound = document.createElement('button');
-rainSound.innerHTML = 'Rain Sound';
-rainSound.addEventListener('click', () => {
-  video.src = './video/rain.mp4';
-  audio.src = './sounds/rain.mp3';
-});
-
-const beachSound = document.createElement('button');
-beachSound.innerHTML = 'Beach Sound';
-beachSound.addEventListener('click', () => {
-  video.src = './video/beach.mp4';
-  audio.src = './sounds/beach.mp3';
-});
-
-const audio = document.createElement('audio');
-audio.autoplay = true;
-audio.loop = true;
-audio.src = './sounds/beach.mp3';
-
-const timeSelect = document.createElement('div');
-timeSelect.setAttribute('id', 'time-select');
-
-const smallMins = document.createElement('button');
-smallMins.innerHTML = '2 Mins';
-smallMins.setAttribute('id', 'small-mins');
-smallMins.addEventListener('click', () => {
-  updateTime(120);
-});
-
-const mediumMins = document.createElement('button');
-mediumMins.innerHTML = '5 Mins';
-mediumMins.setAttribute('id', 'medium-mins');
-mediumMins.addEventListener('click', () => {
-  updateTime(300);
-});
-
-const longMins = document.createElement('button');
-longMins.innerHTML = '10 Mins';
-longMins.setAttribute('id', 'long-mins');
-longMins.addEventListener('click', () => {
-  updateTime(600);
-});
-
-const timeDisplay = document.createElement('div');
-timeDisplay.classList.add('time-display');
-timeDisplay.innerHTML = '10:00';
-
-const playButton = document.createElement('button');
-playButton.classList.add('play');
-playButton.innerHTML = '<i class="fas fa-play"></i>';
-playButton.addEventListener('click', () => {
-  const isPlaying = app.classList.contains('playing');
-
-  if (isPlaying) {
-    pause();
-  } else {
-    play();
-  }
-});
-
-let timeLeft = 0;
-let timerId;
-
-function play() {
-  app.classList.add('playing');
-  timerId = setInterval(() => {
-    timeLeft--;
-    updateTimeDisplay();
-    if (timeLeft === 0) {
-      clearInterval(timerId);
-      pause();
+    if (currentTime <= 0) {
+      clearInterval(timer);
+      pauseMeditation();
     }
   }, 1000);
 }
 
-function pause() {
-  app.classList.remove('playing');
-  clearInterval(timerId);
+function pauseMeditation() {
+  isPlaying = false;
+  video.pause();
+  audio.pause();
+  playButton.textContent = 'Play';
 }
 
-function updateTime(totalSeconds) {
-  timeLeft = totalSeconds;
-  updateTimeDisplay();
+function playMeditation() {
+  isPlaying = true;
+  video.play();
+  audio.play();
+  playButton.textContent = 'Pause';
 }
 
-function updateTimeDisplay() {
-  const minutes = Math.floor(timeLeft / 60);
-  const seconds = timeLeft % 60;
-  timeDisplay.innerHTML = `${minutes}:${String(seconds).padStart(2, '0')}`;
+soundButtons.forEach(button => {
+  button.addEventListener('click', () => {
+    const soundFile = button.id === 'sound1' ? 'beach.mp3' : 'rain.mp3';
+    audio.src = `sounds/${soundFile}`;
+	  audio.play();
+
+// Update the active button styling
+soundButtons.forEach(btn => btn.classList.remove('active'));
+button.classList.add('active');
+});
+});
+
+timeButtons.forEach(button => {
+button.addEventListener('click', () => {
+const time = button.id === 'smaller-mins' ? 2 : button.id === 'medium-mins' ? 5 : 10;
+startTimer(time);
+// Update the active button styling
+timeButtons.forEach(btn => btn.classList.remove('active'));
+button.classList.add('active');
+});
+});
+
+playButton.addEventListener('click', () => {
+if (isPlaying) {
+pauseMeditation();
+} else {
+playMeditation();
 }
-
-soundPicker.appendChild(rainSound);
-soundPicker.appendChild(beachSound);
-
-timeSelect.appendChild(smallMins);
-timeSelect.appendChild(mediumMins);
-timeSelect.appendChild(longMins);
-
-playerContainer.appendChild(soundPicker);
-playerContainer.appendChild(audio);
-
-vidContainer.appendChild(video);
-
-app.appendChild(vidContainer);
-app.appendChild(playerContainer);
-app.appendChild(timeSelect);
-app.appendChild(timeDisplay);
-app.appendChild(playButton);
+});

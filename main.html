@@ -8,27 +8,25 @@
 
 <body>
 	<!-- the entire body must be written by student -->
-	<div id="app">
-	  <div class="vid-container">
-	    <video id="video" src="video/beach.mp4" muted autoplay loop></video>
-	  </div>
-	  <div class="player-container">
-	    <audio id="audio" src="sounds/beach.mp3" loop></audio>
-	  </div>
-	  <div class="sound-picker">
-	    <button id="beach-sound" class="active">Beach Sound</button>
-	    <button id="rain-sound">Rain Sound</button>
-	  </div>
-	  <div class="time-select">
-	    <button id="smaller-mins">2 Mins</button>
-	    <button id="medium-mins">5 Mins</button>
-	    <button id="long-mins">10 Mins</button>
-	  </div>
-	  <div class="time-display">
-	    <p id="time-left">10:00</p>
-	  </div>
-	  <button id="play-pause" class="play"></button>
-	</div>
+	 <div id="app">
+    <div class="vid-container">
+      <video id="video" src="videos/beach.mp4" autoplay loop></video>
+    </div>
+    <div class="player-container">
+      <audio id="audio" src="sounds/beach.mp3"></audio>
+      <div class="sound-picker">
+        <button id="sound1">Sound 1</button>
+        <button id="sound2">Sound 2</button>
+      </div>
+    </div>
+    <div class="time-select">
+      <button id="smaller-mins">2 min</button>
+      <button id="medium-mins">5 min</button>
+      <button id="long-mins">10 min</button>
+    </div>
+    <div class="time-display">10:00</div>
+    <button class="play">Play</button>
+  </div>
 
     <script type="text/javascript" src="./script.js">
 </script>
