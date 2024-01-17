@@ -1,77 +1,51 @@
 //your JS code here. If required.
-const app = document.getElementById('app');
-const videoContainer = document.querySelector('.vid-container');
 const video = document.getElementById('video');
 const audio = document.getElementById('audio');
-const soundButtons = document.querySelectorAll('.sound-picker button');
-const timeButtons = document.querySelectorAll('.time-select button');
 const timeDisplay = document.querySelector('.time-display');
-const playButton = document.querySelector('.play');
 
-let currentTime = 10 * 60; // 10 minutes in seconds
+let countdown;
 let isPlaying = false;
 
-function updateTimer() {
-  const minutes = Math.floor(currentTime / 60);
-  const seconds = currentTime % 60;
-  timeDisplay.textContent = `${minutes}:${seconds.toString().padStart(2, '0')}`;
-}
-
-function startTimer(duration) {
-  currentTime = duration * 60;
-  updateTimer();
-
-  const timer = setInterval(() => {
-    currentTime--;
-    updateTimer();
-
-    if (currentTime <= 0) {
-      clearInterval(timer);
-      pauseMeditation();
+function playPause() {
+    if (!isPlaying) {
+        audio.play();
+        isPlaying = true;
+        document.querySelector('.play').textContent = 'Pause';
+    } else {
+        audio.pause();
+        isPlaying = false;
+        document.querySelector('.play').textContent = 'Play';
     }
-  }, 1000);
 }
 
-function pauseMeditation() {
-  isPlaying = false;
-  video.pause();
-  audio.pause();
-  playButton.textContent = 'Play';
+function changeSound(sound) {
+    audio.src = `sounds/${sound}.mp3`;
+    video.src = `videos/${sound}.mp4`;
+    playPause();
 }
 
-function playMeditation() {
-  isPlaying = true;
-  video.play();
-  audio.play();
-  playButton.textContent = 'Pause';
+function setTime(seconds) {
+    clearInterval(countdown);
+    let timer = seconds;
+    displayTimeLeft(seconds);
+
+    countdown = setInterval(() => {
+        timer--;
+        if (timer < 0) {
+            clearInterval(countdown);
+            isPlaying = false;
+            document.querySelector('.play').textContent = 'Play';
+            return;
+        }
+        displayTimeLeft(timer);
+    }, 1000);
 }
 
-soundButtons.forEach(button => {
-  button.addEventListener('click', () => {
-    const soundFile = button.id === 'sound1' ? 'beach.mp3' : 'rain.mp3';
-    audio.src = `sounds/${soundFile}`;
-	  audio.play();
-
-// Update the active button styling
-soundButtons.forEach(btn => btn.classList.remove('active'));
-button.classList.add('active');
-});
-});
-
-timeButtons.forEach(button => {
-button.addEventListener('click', () => {
-const time = button.id === 'smaller-mins' ? 2 : button.id === 'medium-mins' ? 5 : 10;
-startTimer(time);
-// Update the active button styling
-timeButtons.forEach(btn => btn.classList.remove('active'));
-button.classList.add('active');
-});
-});
-
-playButton.addEventListener('click', () => {
-if (isPlaying) {
-pauseMeditation();
-} else {
-playMeditation();
+function displayTimeLeft(seconds) {
+    const minutes = Math.floor(seconds / 60);
+    let remainderSeconds = seconds % 60;
+    if (remainderSeconds < 10) {
+        remainderSeconds = '0' + remainderSeconds;
+    }
+    timeDisplay.textContent = `${minutes}:${remainderSeconds}`;
 }
-});
