@@ -4,10 +4,41 @@
 
 <head>
 	<link rel="stylesheet" href="styles.css">
+	<title>Meditation App</title>
 </head>
 
 <body>
 	<!-- the entire body must be written by student -->
+	<div id="app">
+    <div class="vid-container">
+      <video id="meditationVideo" loop>
+        <source src="videos/beach.mp4" type="video/mp4">
+        <!-- Add additional source elements for different video formats (e.g., WebM, Ogg) -->
+      </video>
+    </div>
+
+    <div class="player-container">
+      <audio id="meditationAudio" loop>
+        <source id="audioSource" src="Sounds/beach.mp3" type="audio/mp3">
+        <!-- Add additional source elements for different audio formats (e.g., Ogg) -->
+      </audio>
+    </div>
+
+    <div class="sound-picker">
+      <button id="beachSoundBtn" class="sound-btn" onclick="changeSound('beach.mp3')">Beach Sound</button>
+      <button id="rainSoundBtn" class="sound-btn" onclick="changeSound('rain.mp3')">Rain Sound</button>
+    </div>
+
+    <div class="time-select">
+      <button id="smaller-mins" onclick="setMeditationTime(2)">2 mins</button>
+      <button id="medium-mins" onclick="setMeditationTime(5)">5 mins</button>
+      <button id="long-mins" onclick="setMeditationTime(10)">10 mins</button>
+    </div>
+
+    <div class="time-display">10:00</div>
+
+    <button class="play" onclick="togglePlayPause()">Play</button>
+  </div>
     <script type="text/javascript" src="./script.js">
 </script>
 
